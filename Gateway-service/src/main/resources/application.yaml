@@ -1,0 +1,54 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: Gateway Service
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**, /api/products/**
+        - id: demand-forecasting-service
+          uri: lb://demand-forecasting-service
+          predicates:
+            - Path=/api/forecast/**
+        - id: inventory-optimization-service
+          uri: lb://inventory-optimization-service
+          predicates:
+            - Path=/api/inventory/**
+        - id: logistics-tracking-service
+          uri: lb://logistics-tracking-service
+          predicates:
+            - Path=/api/track/**
+        - id: supplier-collaboration
+          uri: lb://supplier-collaboration
+          predicates:
+            - Path=/api/suppliers/**
+        - id: supply-chain-analytics
+          uri: lb://supply-chain-analytics
+          predicates:
+            - Path=/api/analytics/**
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]': 
+            allowedOrigins: "*"  
+            allowedMethods: "*"  
+            allowedHeaders: "*"  
+       
+          
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:9000/eureka/
